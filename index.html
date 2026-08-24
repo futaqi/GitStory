@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futuristic Vision - Balung Pisah</title>
+    <!-- Kombinasi Font: Montserrat & Playfair Display -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&family=Playfair+Display:ital,wght@1,400;1,600&display=swap" rel="stylesheet">
+    <style>
+        /* Pengaturan Dasar */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; background-color: #050505; color: #fff; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        
+        /* Background Gelap Elegan */
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at center, #14141c 0%, #030303 100%);
+            z-index: -1;
+        }
+
+        /* Layar Awal (Intro) */
+        #intro-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #000; z-index: 50; transition: opacity 1.2s ease; }
+        .enter-btn { padding: 15px 40px; font-size: 14px; font-weight: 700; color: #d4af37; background: transparent; border: 1px solid #d4af37; border-radius: 30px; cursor: pointer; text-transform: uppercase; letter-spacing: 4px; transition: 0.5s; box-shadow: 0 0 15px rgba(212, 175, 55, 0.15); }
+        .enter-btn:active { background: #d4af37; color: #000; }
+
+        /* Tata Letak Utama (Split Layout) */
+        #main-content { display: none; opacity: 0; transition: opacity 2s ease; min-height: 100vh; padding: 40px 20px; flex-direction: column; align-items: center; justify-content: center; gap: 30px; }
+        @media (min-width: 768px) { #main-content { flex-direction: row; justify-content: space-evenly; padding: 50px; } }
+
+        /* Kolom Video */
+        .video-wrapper { 
+            background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 10px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            width: 100%; max-width: 320px; display: flex; justify-content: center;
+            transform: translateZ(0);
+        }
+        video { width: 100%; border-radius: 12px; pointer-events: none; -webkit-user-select: none; user-select: none; }
+
+        /* Kolom Teks & Promosi */
+        .content-wrapper { display: flex; flex-direction: column; gap: 30px; max-width: 480px; width: 100%; }
+
+        /* Teks Animasi Mengetik */
+        .typewriter-container { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 18px; 
+            font-style: italic; 
+            font-weight: 400;
+            line-height: 1.7; 
+            color: #f0f0f0; 
+            min-height: 200px; /* Diperbesar sedikit agar saat teks dihapus, kartu tidak naik ke atas */
+            border-left: 2px solid rgba(212, 175, 55, 0.7); 
+            padding-left: 20px;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); 
+            letter-spacing: 0.5px;
+            display: flex;
+        }
+        
+        #typewriter-text { transition: opacity 0.8s ease; /* Transisi halus saat teks dihapus */ }
+        .cursor { display: inline-block; width: 1.5px; height: 20px; background-color: #d4af37; animation: blink 1s infinite; vertical-align: middle; margin-left: 4px; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* =========================================
+           Animasi Denyut (Pulse) untuk Promo Card 
+           ========================================= */
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.1); border-color: rgba(212, 175, 55, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.6), inset 0 0 15px rgba(212, 175, 55, 0.1); border-color: rgba(212, 175, 55, 0.8); }
+            100% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.1); border-color: rgba(212, 175, 55, 0.2); }
+        }
+
+        /* Kartu Promosi */
+        .promo-card { 
+            background: rgba(212, 175, 55, 0.04); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 16px; padding: 25px; 
+            text-decoration: none; display: block; 
+            transform: translateZ(0); 
+            transition: background 0.4s ease;
+            animation: pulseGlow 2.5s infinite ease-in-out; /* Mengaktifkan efek denyut terus-menerus */
+        }
+        
+        @media (hover: hover) {
+            .promo-card:hover { background: rgba(212, 175, 55, 0.1); animation-play-state: paused; border-color: #d4af37; box-shadow: 0 10px 40px rgba(212, 175, 55, 0.4); }
+        }
+
+        /* Desain Tipografi Promo Card */
+        .promo-title { font-size: 18px; font-weight: 700; color: #d4af37; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 5px; }
+        .promo-subtitle { font-size: 13px; font-weight: 400; color: #e0e0e0; font-style: italic; margin-bottom: 15px; letter-spacing: 0.5px; }
+        .promo-divider { width: 30px; height: 2px; background-color: #d4af37; margin-bottom: 15px; border-radius: 2px; }
+        .promo-desc { font-size: 14px; font-weight: 300; line-height: 1.7; color: #cccccc; text-align: left; }
+    </style>
+</head>
+<body oncontextmenu="return false;"> 
+
+    <div id="intro-screen">
+        <button class="enter-btn" id="enter-btn">Initialize System</button>
+    </div>
+
+    <div id="main-content">
+        
+        <div class="video-wrapper">
+            <video id="my-video" playsinline preload="auto">
+                <source src="https://res.cloudinary.com/dvnnqepeu/video/upload/v1787578557/kobong_y57ui4.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <div class="content-wrapper">
+            
+            <div class="typewriter-container">
+                <span id="typewriter-text"></span><span class="cursor"></span>
+            </div>
+
+            <a href="https://balungpisah.id/" target="_blank" class="promo-card">
+                <div class="promo-title">BALUNG PISAH</div>
+                <div class="promo-subtitle">Gotong royong menyambung yang terpisah.</div>
+                <div class="promo-divider"></div>
+                <div class="promo-desc">
+                    Rakyat urun data, AI menjernihkan, Pejabat menuntaskan. BalungPisah adalah sebuah platform untuk menyampaikan aspirasi dan melaporkan permasalahan di sekitarmu. Suaramu penting untuk perubahan.
+                </div>
+            </a>
+            
+        </div>
+    </div>
+
+    <script>
+        // Memecah teks menjadi 2 bagian (Array) agar tidak terlalu panjang
+        const quotes = [
+            "Hakikat terdalam dari sebuah wicked problem adalah ketiadaan jawaban yang paripurna; pada akhirnya, di tengah labirin tanpa muara itu, satu-satunya penawar yang tersisa bukanlah menyerah, melainkan kebersamaan yang terjalin lewat gotong royong dan tangan yang saling berpegang erat.",
+            "Ini bukan panggung satu orang. Ini meja bersama yang butuh diisi dengan berbagai keahlian. Kamu punya tempat di sini."
+        ];
+        
+        const enterBtn = document.getElementById('enter-btn');
+        const introScreen = document.getElementById('intro-screen');
+        const mainContent = document.getElementById('main-content');
+        const video = document.getElementById('my-video');
+        const typeTarget = document.getElementById('typewriter-text');
+
+        let quoteIndex = 0;
+        let charIndex = 0;
+
+        enterBtn.addEventListener('click', () => {
+            introScreen.style.opacity = '0';
+            setTimeout(() => {
+                introScreen.style.display = 'none';
+                mainContent.style.display = 'flex';
+                setTimeout(() => { mainContent.style.opacity = '1'; }, 100);
+                
+                video.volume = 1;
+                video.play();
+                
+                // Memulai pengetikan teks pertama
+                setTimeout(typeWriter, 1200);
+
+                // Menghentikan video persis di 60 detik
+                setTimeout(() => { video.pause(); }, 60000);
+            }, 1000);
+        });
+
+        // Logika Ketik, Jeda, Hapus, dan Lanjut (Multi-Phase)
+        function typeWriter() {
+            if (charIndex < quotes[quoteIndex].length) {
+                typeTarget.innerHTML += quotes[quoteIndex].charAt(charIndex);
+                charIndex++;
+                
+                // Kecepatan diatur: ~90ms per huruf (agar total waktu pas di kisaran 46-50 detik)
+                let typingSpeed = quoteIndex === 0 ? 85 : 100; // Teks kedua sedikit lebih lambat untuk penegasan
+                setTimeout(typeWriter, typingSpeed);
+            } else {
+                // Jika teks pertama selesai diketik
+                if (quoteIndex < quotes.length - 1) {
+                    setTimeout(() => {
+                        // Membuat teks memudar perlahan
+                        typeTarget.style.opacity = 0; 
+                        
+                        setTimeout(() => {
+                            // Menghapus teks, memunculkan kembali opacity, dan lanjut teks kedua
+                            typeTarget.innerHTML = "";
+                            typeTarget.style.opacity = 1;
+                            quoteIndex++;
+                            charIndex = 0;
+                            typeWriter();
+                        }, 800); // Waktu yang dibutuhkan untuk transisi pudar (0.8 detik)
+                        
+                    }, 5000); // Waktu jeda (5 detik) memberi waktu pembaca meresapi teks pertama sebelum dihapus
+                }
+            }
+        }
+    </script>
+</body>
+</html>
